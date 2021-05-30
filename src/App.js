@@ -1,45 +1,18 @@
 import { useState, useEffect } from 'react';
-import tw, { styled } from 'twin.macro';
+import { Route, Switch } from 'react-router-dom';
 
-import axios from 'axios';
 import Nav from './components/Nav';
-import Movies from './components/Movies';
+import Trending from './components/Trending';
+import Search from './components/Search';
 
 export default function App() {
-  const [movies, setMovies] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-
-  useEffect(() => {
-    const scrolling_function = () => {
-      if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
-        setCurrentPage(current => {
-          return current + 1;
-        });
-      }
-    };
-    window.addEventListener('scroll', scrolling_function);
-    return () => window.removeEventListener('scroll', scrolling_function);
-  }, []);
-
-  useEffect(() => {
-    axios
-      .get(
-        `https://api.themoviedb.org/3/trending/movie/week?api_key=f096158ca602cedb5b86f00676658b68&page=${currentPage}`
-      )
-      .then(({ data: { results } }) =>
-        setMovies(prev => {
-          return [...prev, ...results];
-        })
-      )
-      .catch(err => console.log(err));
-  }, [currentPage]);
-
   return (
     <>
       <Nav></Nav>
-      <div tw='max-w-screen-2xl mx-auto'>
-        {movies.length ? <Movies movies={movies}></Movies> : ''}
-      </div>
+      <Switch>
+        <Route exact path='/' component={Trending}></Route>
+        <Route exact path='/search' component={Search}></Route>
+      </Switch>
     </>
   );
 }
