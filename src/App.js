@@ -7,9 +7,7 @@ import Movies from './components/Movies';
 
 export default function App() {
   const [movies, setMovies] = useState([]);
-  const [currentPage, setCurrentPage] = useState(0);
-
-  const getMovies = () => setCurrentPage(1);
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     const scrolling_function = () => {
@@ -24,23 +22,21 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if (currentPage) {
-      axios
-        .get(
-          `https://api.themoviedb.org/3/trending/movie/week?api_key=f096158ca602cedb5b86f00676658b68&page=${currentPage}`
-        )
-        .then(({ data: { results } }) =>
-          setMovies(prev => {
-            return [...prev, ...results];
-          })
-        )
-        .catch(err => console.log(err));
-    }
+    axios
+      .get(
+        `https://api.themoviedb.org/3/trending/movie/week?api_key=f096158ca602cedb5b86f00676658b68&page=${currentPage}`
+      )
+      .then(({ data: { results } }) =>
+        setMovies(prev => {
+          return [...prev, ...results];
+        })
+      )
+      .catch(err => console.log(err));
   }, [currentPage]);
 
   return (
     <>
-      <Nav getMovies={getMovies}></Nav>
+      <Nav></Nav>
       <div tw='max-w-screen-2xl mx-auto'>
         {movies.length ? <Movies movies={movies}></Movies> : ''}
       </div>
